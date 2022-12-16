@@ -44,13 +44,13 @@ public class Main {
                 }
                 case 2: {
                     userBuy[1] += productCount;
-                    basket.addToCart(1, userBuy[0]);
+                    basket.addToCart(1, userBuy[1]);
                     basket.printCard();
                     continue;
                 }
                 case 3: {
                     userBuy[2] += productCount;
-                    basket.addToCart(2, userBuy[0]);
+                    basket.addToCart(2, userBuy[2]);
                     basket.printCard();
                     continue;
                 }
