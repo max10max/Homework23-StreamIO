@@ -1,9 +1,11 @@
 import com.sun.source.tree.NewArrayTree;
 
+import javax.management.ObjectName;
 import java.io.*;
 import java.util.Arrays;
 
-public class Basket {
+public class Basket implements Serializable {
+    private static final long serialVersionUID = 1l;
     private String[] products;
     private int[] prices;
     private int[] userChoose; // Кол-во выбранного товара покупателем
@@ -16,10 +18,11 @@ public class Basket {
         userChoose = new int[products.length];
     }
 
-    public void setUserChoose(int[] amount){
+    public void setUserChoose(int[] amount) {
         this.userChoose = amount;
     }
-    public int[] getUserChoose(){
+
+    public int[] getUserChoose() {
         return userChoose;
     }
 
@@ -32,7 +35,7 @@ public class Basket {
     }
 
     public void addToCart(int productNumber, int amount) {
-        userChoose[productNumber] =  amount;
+        userChoose[productNumber] = amount;
 //        System.out.printf("Продукт \"%s\" добавлен в корзину в количестве %d штук!\n",
 //                products[productNumber], amount);
     }
@@ -83,4 +86,27 @@ public class Basket {
         basket.setUserChoose(amount);
         return basket;
     }
+
+    public void saveBin(File file) {
+        try (FileOutputStream out = new FileOutputStream(file);
+             ObjectOutputStream outObj = new ObjectOutputStream(out)) {
+            Basket basketBin = new Basket(products, prices);
+            basketBin.setUserChoose(userChoose);
+            outObj.writeObject(basketBin);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    static Basket loadFromBinFile(File file) {
+        Basket basketBin = null;
+        try (FileInputStream in = new FileInputStream(file);
+             ObjectInputStream inObj = new ObjectInputStream(in)) {
+            basketBin = (Basket) inObj.readObject();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return basketBin;
+    }
+
 }

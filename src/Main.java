@@ -1,23 +1,25 @@
+import javax.sound.midi.Soundbank;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        File fileForBasket = new File("basket.txt");
+//         File fileForBasket = new File("basket.txt");
+        File fileForBasket = new File("basket.bin");
         String[] products = {"Молоко", "Хлеб", "Гречневая крупа"};
         int[] prices = {50, 14, 80};
         int[] userBuy = {0, 0, 0}; //Массив содержит количество купленных товаров относительно массива products
         Scanner scanner = new Scanner(System.in);
         Basket basket;
         if (fileForBasket.exists()) {
-            basket = Basket.loadFromTxtFile(fileForBasket);
-            basket.setPrices(prices);
+            basket = Basket.loadFromBinFile(fileForBasket);
             basket.printCard();
             userBuy = basket.getUserChoose();
         } else {
-          //  boolean fileCreate = fileForBasket.createNewFile();
             basket = new Basket(products, prices);
         }
 
@@ -44,20 +46,21 @@ public class Main {
                 }
                 case 2: {
                     userBuy[1] += productCount;
-                    basket.addToCart(1, userBuy[0]);
+                    basket.addToCart(1, userBuy[1]);
                     basket.printCard();
                     continue;
                 }
                 case 3: {
                     userBuy[2] += productCount;
-                    basket.addToCart(2, userBuy[0]);
+                    basket.addToCart(2, userBuy[2]);
                     basket.printCard();
                     continue;
                 }
             }
         }
-        basket.saveTxt(fileForBasket);
         shoping(products, prices, userBuy);
+        basket.saveBin(fileForBasket);
+
 
     }
 
